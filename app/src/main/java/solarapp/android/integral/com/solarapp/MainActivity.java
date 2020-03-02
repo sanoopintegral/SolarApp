@@ -2,20 +2,9 @@ package solarapp.android.integral.com.solarapp;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import im.delight.android.webview.AdvancedWebView;
@@ -33,7 +22,7 @@ public class MainActivity extends AppCompatActivity  implements AdvancedWebView.
         setContentView(binding.getRoot());
         binding.wvMain.setListener(this,this);
         binding.wvMain.addPermittedHostname(CommonUtils.APP_HOST);
-        binding.wvMain.loadUrl("http://www.thinkganesha.com/");
+        binding.wvMain.loadUrl(CommonUtils.APP_HOME);
     }
 
     @Override
