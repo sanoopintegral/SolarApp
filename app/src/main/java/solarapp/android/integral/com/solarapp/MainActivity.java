@@ -14,12 +14,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import im.delight.android.webview.AdvancedWebView;
 import solarapp.android.integral.com.solarapp.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements AdvancedWebView.Listener {
 
     private static final int FILE_CHOOSER_RESULT_CODE = 101;
     private ActivityMainBinding binding;
@@ -29,104 +31,73 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        WebSettings settings = binding.wvMain.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setUseWideViewPort(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        settings.setDomStorageEnabled(true);
-        binding.wvMain.addJavascriptInterface(new WebAppInterface(this),"Android");
-        binding.wvMain.setWebViewClient(new MyWebViewClient());
-        binding.wvMain.setWebChromeClient(new WebChromeClient(){
-
-            @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-//                return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
-
-                openFileChooser();
-                return true;
-            }
-
-
-            public void openFileChooser() {
-//                uploadFile = uploadMessage;
-
-                final Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("image/*");
-                startActivityForResult(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
-            }
-
-
-        });
+        binding.wvMain.setListener(this,this);
+        binding.wvMain.addPermittedHostname(CommonUtils.APP_HOST);
         binding.wvMain.loadUrl("http://www.thinkganesha.com/");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        binding.wvMain.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onPause() {
+        binding.wvMain.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.wvMain.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        binding.wvMain.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
 
-        if(binding.wvMain.canGoBack()){
-
-            binding.wvMain.goBack();
-
-        }else{
-
-            super.onBackPressed();
+        if (!binding.wvMain.onBackPressed()) {
+            return;
         }
+        super.onBackPressed();
     }
 
-    private class MyWebViewClient extends WebViewClient{
 
+    @Override
+    public void onPageStarted(String url, Bitmap favicon) {
 
+    }
 
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
+    @Override
+    public void onPageFinished(String url) {
 
-        }
+    }
 
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-        }
+    @Override
+    public void onPageError(int errorCode, String description, String failingUrl) {
 
-        @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            super.onReceivedError(view, request, error);
-        }
+    }
 
-        @Override
-        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            super.onReceivedHttpError(view, request, errorResponse);
-        }
+    @Override
+    public void onDownloadRequested(String url, String suggestedFilename, String mimeType, long contentLength, String contentDisposition, String userAgent) {
 
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    }
 
-            if (CommonUtils.APP_HOST.equals(Uri.parse(url).getHost())) {
-                // This is my website, so do not override; let my WebView load the page
-                return false;
-            }
-            // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-            return true;
-        }
+    @Override
+    public void onExternalPageRequest(String url) {
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+       /* Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+        startActivity(intent);*/
 
-            Uri uri = request.getUrl();
-            if (CommonUtils.APP_HOST.equals(uri.getHost())) {
-                // This is my website, so do not override; let my WebView load the page
-                return false;
-            }
-            // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-            return true;
+        if (AdvancedWebView.Browsers.hasAlternative(this)) {
+            AdvancedWebView.Browsers.openUrl(this, url);
         }
     }
 }
