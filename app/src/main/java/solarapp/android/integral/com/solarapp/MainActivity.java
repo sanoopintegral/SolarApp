@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import im.delight.android.webview.AdvancedWebView;
 import solarapp.android.integral.com.solarapp.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity  implements AdvancedWebView.Listener {
+public class MainActivity extends AppCompatActivity implements im.delight.android.webview.AdvancedWebView.Listener {
 
     private static final int FILE_CHOOSER_RESULT_CODE = 101;
     private ActivityMainBinding binding;
@@ -89,4 +89,6 @@ public class MainActivity extends AppCompatActivity  implements AdvancedWebView.
             AdvancedWebView.Browsers.openUrl(this, url);
         }
     }
+
+
 }
