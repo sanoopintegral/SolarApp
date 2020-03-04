@@ -3,17 +3,23 @@ package solarapp.android.integral.com.solarapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import im.delight.android.webview.AdvancedWebView;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import solarapp.android.integral.com.solarapp.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements im.delight.android.webview.AdvancedWebView.Listener {
+public class MainActivity extends AppCompatActivity implements AdvancedWebView.Listener {
 
     private static final int FILE_CHOOSER_RESULT_CODE = 101;
     private ActivityMainBinding binding;
+    private File savingfile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,27 @@ public class MainActivity extends AppCompatActivity implements im.delight.androi
             AdvancedWebView.Browsers.openUrl(this, url);
         }
     }
+
+    public File createFileToSave() {
+
+        File picturedirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        String name = null;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+        name = simpleDateFormat.format(new Date());
+
+
+        savingfile = new File(picturedirectory, "JPEG_" + name + ".jpg");
+        try {
+            savingfile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return savingfile;
+
+    }
+
 
 
 }

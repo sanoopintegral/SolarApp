@@ -1,4 +1,4 @@
-package im.delight.android.webview;
+package solarapp.android.integral.com.solarapp;
 
 /*
  * Android-AdvancedWebView (https://github.com/delight-im/Android-AdvancedWebView)
@@ -12,16 +12,19 @@ import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Base64;
@@ -49,9 +52,12 @@ import android.webkit.WebStorage.QuotaUpdater;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.core.content.FileProvider;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -96,6 +102,8 @@ public class AdvancedWebView extends WebView {
     protected WebChromeClient mCustomWebChromeClient;
     protected boolean mGeolocationEnabled;
     protected String mUploadableFileTypes = "image/*";
+    File file = null;
+    Uri filesavinguri = null;
 
     public AdvancedWebView(Context context) {
         super(context);
@@ -202,7 +210,7 @@ public class AdvancedWebView extends WebView {
         final Request request = new Request(Uri.parse(fromUrl));
         if (Build.VERSION.SDK_INT >= 11) {
             request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         }
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, toFilename);
 
@@ -212,7 +220,7 @@ public class AdvancedWebView extends WebView {
                 dm.enqueue(request);
             } catch (SecurityException e) {
                 if (Build.VERSION.SDK_INT >= 11) {
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                    request.setNotificationVisibility(Request.VISIBILITY_VISIBLE);
                 }
                 dm.enqueue(request);
             }
@@ -411,36 +419,72 @@ public class AdvancedWebView extends WebView {
                             if (intent.getDataString() != null) {
                                 dataUris = new Uri[]{Uri.parse(intent.getDataString())};
                             } else {
-                                if (Build.VERSION.SDK_INT >= 16) {
-                                    if (intent.getClipData() != null) {
-                                        final int numSelectedFiles = intent.getClipData().getItemCount();
+                                if (intent.getClipData() != null) {
+                                    final int numSelectedFiles = intent.getClipData().getItemCount();
 
-                                        dataUris = new Uri[numSelectedFiles];
+                                    dataUris = new Uri[numSelectedFiles];
 
-                                        for (int i = 0; i < numSelectedFiles; i++) {
-                                            dataUris[i] = intent.getClipData().getItemAt(i).getUri();
-                                        }
+                                    for (int i = 0; i < numSelectedFiles; i++) {
+                                        dataUris[i] = intent.getClipData().getItemAt(i).getUri();
                                     }
                                 }
                             }
                         } catch (Exception ignored) {
                         }
 
-                        dataUris[0] = Uri.parse("content://solarapp.android.integral.com.solarapp.fileprovider/my_images/Pictures/JPEG_2020_03_03_05_40_04.jpg");
                         mFileUploadCallbackSecond.onReceiveValue(dataUris);
                         mFileUploadCallbackSecond = null;
+                        deleteNewlyCreatedFile();
+
                     }
+                } else if (file != null) {
+
+                    if (mFileUploadCallbackFirst != null) {
+                        mFileUploadCallbackFirst.onReceiveValue(filesavinguri);
+                        mFileUploadCallbackFirst = null;
+                        addImageToGallery();
+                    } else if (mFileUploadCallbackSecond != null) {
+
+                        mFileUploadCallbackSecond.onReceiveValue(new Uri[]{filesavinguri});
+                        mFileUploadCallbackSecond = null;
+                        addImageToGallery();
+                    } else {
+
+                        deleteNewlyCreatedFile();
+                    }
+
+                } else {
+
+                    makeCallbacksNull();
+
+                    deleteNewlyCreatedFile();
                 }
             } else {
-                if (mFileUploadCallbackFirst != null) {
-                    mFileUploadCallbackFirst.onReceiveValue(null);
-                    mFileUploadCallbackFirst = null;
-                } else if (mFileUploadCallbackSecond != null) {
-                    mFileUploadCallbackSecond.onReceiveValue(null);
-                    mFileUploadCallbackSecond = null;
-                }
+                makeCallbacksNull();
+
+                deleteNewlyCreatedFile();
             }
         }
+    }
+
+    private void makeCallbacksNull() {
+        if (mFileUploadCallbackFirst != null) {
+            mFileUploadCallbackFirst.onReceiveValue(null);
+            mFileUploadCallbackFirst = null;
+        } else if (mFileUploadCallbackSecond != null) {
+            mFileUploadCallbackSecond.onReceiveValue(null);
+            mFileUploadCallbackSecond = null;
+        }
+    }
+
+    private void deleteNewlyCreatedFile() {
+
+        if (file != null) {
+            file.delete();
+            file = null;
+            filesavinguri = null;
+        }
+
     }
 
     /**
@@ -849,7 +893,7 @@ public class AdvancedWebView extends WebView {
 
             // file upload callback (Android 5.0 (API level 21) -- current) (public method)
             @SuppressWarnings("all")
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 if (Build.VERSION.SDK_INT >= 21) {
                     final boolean allowMultiple = fileChooserParams.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE;
 
@@ -1290,23 +1334,31 @@ public class AdvancedWebView extends WebView {
         filechooserintent.addCategory(Intent.CATEGORY_OPENABLE);
         filechooserintent.setType(mUploadableFileTypes);
 
-
         Intent cameracaptureintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if ((mActivity != null) && (mActivity.get() instanceof solarapp.android.integral.com.solarapp.MainActivity)) {
 
-        File file = null;
+            file = ((MainActivity) mActivity.get()).createFileToSave();
+            filesavinguri = FileProvider.getUriForFile(mActivity.get(), "solarapp.android.integral.com.solarapp.fileprovider", file);
 
-        if((mActivity!= null)&&(mActivity instanceof solarapp.android.integral.com.solarapp.MainActivity)){
-
-            mActivity.createFileToSave()
         }
 
-        File file = createFileToSave();
-        Uri filesavinguri = FileProvider.getUriForFile(this, "solarapp.android.integral.com.solarapp.fileprovider", file);
-        cameracaptureintent.putExtra(MediaStore.EXTRA_OUTPUT, filesavinguri);
+        if (mActivity != null) {
 
+            List<Intent> cameraeligibleintents = new ArrayList<>();
+            List<ResolveInfo> resolveInfos = mActivity.get().getPackageManager().queryIntentActivities(cameracaptureintent, 0);
+            for (ResolveInfo resolveInfo : resolveInfos) {
 
+                String packageName = resolveInfo.activityInfo.packageName;
 
+                Intent intent = new Intent(cameracaptureintent);
+                intent.setComponent(new ComponentName(packageName, resolveInfo.activityInfo.name));
+                intent.setPackage(packageName);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, filesavinguri);
+                cameraeligibleintents.add(intent);
 
+            }
+            Intent chooserintent = Intent.createChooser(filechooserintent, "Select Image from");
+            chooserintent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraeligibleintents.toArray(new Parcelable[cameraeligibleintents.size()]));
 
      /*   if (allowMultiple) {
             if (Build.VERSION.SDK_INT >= 18) {
@@ -1314,17 +1366,23 @@ public class AdvancedWebView extends WebView {
             }
         }
 */
-
-
-
-
-
-        if (i.resolveActivity(getContext().getPackageManager()) != null) {
-
-            if (mFragment != null && mFragment.get() != null && Build.VERSION.SDK_INT >= 11) {
-                mFragment.get().startActivityForResult(Intent.createChooser(i, getFileUploadPromptLabel()), mRequestCodeFilePicker);
+            if (mFragment != null && mFragment.get() != null) {
+                mFragment.get().startActivityForResult(Intent.createChooser(chooserintent, getFileUploadPromptLabel()), mRequestCodeFilePicker);
             } else if (mActivity != null && mActivity.get() != null) {
-                mActivity.get().startActivityForResult(Intent.createChooser(i, getFileUploadPromptLabel()), mRequestCodeFilePicker);
+                mActivity.get().startActivityForResult(chooserintent, mRequestCodeFilePicker);
+            }
+
+        }
+
+    }
+
+    private void addImageToGallery() {
+
+        if (filesavinguri != null) {
+            Intent galleryaddintent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            galleryaddintent.setData(Uri.parse(filesavinguri.getPath()));
+            if (mActivity != null) {
+                mActivity.get().sendBroadcast(galleryaddintent);
             }
 
         }

@@ -5,7 +5,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <im.delight.android.webview.AdvancedWebView
+    <solarapp.android.integral.com.solarapp.AdvancedWebView
             android:id="@+id/wv_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

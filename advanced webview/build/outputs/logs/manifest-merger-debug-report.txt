@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-6:12
+ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-4:12
+INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-4:12
+INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-4:12
 	package
-		ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:3:5-41
+		ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:11-47
 		INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml
 		INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:2:5-63
+		ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:1:1-4:12
 application
-ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:5:5-20
+ADDED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:3:5-20
 uses-sdk
 INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml

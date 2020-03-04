@@ -6,6 +6,6 @@
 5-->D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml
 6
 7    <application />
-7-->D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:5:5-20
+7-->D:\Sanoop\Home\SolarApp\advanced webview\src\main\AndroidManifest.xml:3:5-20
 8
 9</manifest>
