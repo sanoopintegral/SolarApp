@@ -98,6 +98,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeFile(savingfile.getPath(), bmpoptions);
                     activityImageSelectionBinding.imgSelected.setImageBitmap(bitmap);
 
+
                     addImageToGallery();
                 }
             }
