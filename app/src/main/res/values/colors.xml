@@ -8,5 +8,6 @@
     <color name="app_color">#dc7734</color>
     <color name="input_edit_background_activated">#dc7734</color>
     <color name="input_edit_background_default">#D3D3D3</color>
+    <color name="black">#000000</color>
 
 </resources>

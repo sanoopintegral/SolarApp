@@ -5,4 +5,11 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="full_name">Full Name</string>
+    <string name="login_failed">Login failed , please try again.</string>
+    <string name="retry">Retry</string>
+    <string name="something_went_wrong_msg">Something went wrong, please try again.</string>
+    <string name="network_error">No internet connectivity. Please ensure a stable cellular or WiFi internet connection.</string>
+    <string name="cancel">Cancel</string>
+    <string name="ask_again">Ask again</string>
+    <string name="location_permisison_msg">Current Location needed to update the details</string>
 </resources>

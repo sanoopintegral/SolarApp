@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,15 +22,32 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
     private static final int FILE_CHOOSER_RESULT_CODE = 101;
     private ActivityMainBinding binding;
     private File savingfile = null;
+    private String failingurl = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.wvMain.setListener(this,this);
+        binding.wvMain.setListener(this, this);
         binding.wvMain.addPermittedHostname(CommonUtils.APP_HOST);
         binding.wvMain.loadUrl(CommonUtils.APP_HOME);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        listeners();
+    }
+
+    private void listeners() {
+
+        binding.btnRetry.setOnClickListener(v -> {
+
+            binding.wvMain.loadUrl(failingurl);
+
+        });
+
     }
 
     @Override
@@ -68,15 +87,25 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
     @Override
     public void onPageStarted(String url, Bitmap favicon) {
 
+
+        binding.btnRetry.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onPageFinished(String url) {
 
+        binding.wvMain.setVisibility(View.VISIBLE);
+
     }
 
     @Override
     public void onPageError(int errorCode, String description, String failingUrl) {
+
+        Toast.makeText(this, R.string.network_error, Toast.LENGTH_SHORT).show();
+        binding.wvMain.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.VISIBLE);
+        this.failingurl = failingUrl;
 
     }
 
@@ -115,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdvancedWebView.L
         return savingfile;
 
     }
-
 
 
 }

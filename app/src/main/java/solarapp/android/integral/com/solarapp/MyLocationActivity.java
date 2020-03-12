@@ -2,16 +2,20 @@ package solarapp.android.integral.com.solarapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -80,12 +84,31 @@ public class MyLocationActivity extends AppCompatActivity {
                 boolean shouldShowRequestPermissionRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION);
                 if (shouldShowRequestPermissionRationale) {
 
+                    new AlertDialog.Builder(MyLocationActivity.this).setMessage(getString(R.string.location_permisison_msg))
+                            .setTitle("Permission required to retrieve Current Location")
+                            .setPositiveButton(R.string.ask_again, (dialogInterface, i) -> {
+
+                                dialogInterface.dismiss();
+                                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RC_LOCATION_PERMISSION);
+
+                            }).setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {
+
+                        dialogInterface.dismiss();
+                    })
+                            .create().show();
 
                 } else {
 
-                    // do something
+                    // Open Settings Permission page to allow Location
 
-                    Shape.Circle shape = new Shape.Circle(1.0f);
+                    Intent i = new Intent();
+                    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.setData(Uri.parse("package:" + getPackageName()));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    startActivity(i);
 
 
                 }
