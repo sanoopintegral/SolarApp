@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <Button
-            android:id="@+id/btn_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
+        android:id="@+id/btn_show_web_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:padding="8dp"
+        android:text="Show Webview"
         android:textColor="@color/black_to_white"
-            android:padding="8dp"
-            android:text="Home"
 
-            />
+        />
 
     <Button
         android:id="@+id/btn_current_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_background"
-            android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:padding="8dp"
         android:text="Current Location"
         android:textColor="@color/black_to_white"
 
-            />
+        />
 
     <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_background"
-            android:padding="8dp"
-        android:text="Help"
+        android:id="@+id/btn_javascript_interface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:padding="8dp"
+        android:text="JavaScript Interface"
         android:textColor="@color/black_to_white"
 
-            />
+        />
 
 
 </LinearLayout>

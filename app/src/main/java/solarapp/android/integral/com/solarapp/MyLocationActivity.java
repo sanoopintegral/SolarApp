@@ -44,6 +44,8 @@ public class MyLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityMyLocationBinding = ActivityMyLocationBinding.inflate(getLayoutInflater());
         setContentView(activityMyLocationBinding.getRoot());
+
+        activityMyLocationBinding.txtAuthor.setText(ExampleSigleton.INSTANCE.getUser().name);
     }
 
 

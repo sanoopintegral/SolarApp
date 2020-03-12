@@ -29,7 +29,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void listeners() {
 
-        activityDashboardBinding.btnHome.setOnClickListener(v -> {
+        activityDashboardBinding.btnShowWebView.setOnClickListener(v -> {
 
             openHomeWebView();
 
@@ -40,6 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
             openCurrentLocationPage();
 
 
+        });
+        activityDashboardBinding.btnJavascriptInterface.setOnClickListener(v -> {
+            showJavaScriptWebpage();
         });
     }
 
@@ -54,6 +57,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         Intent homewebviewintent = new Intent(this, MainActivity.class);
         startActivity(homewebviewintent);
+    }
+
+    private void showJavaScriptWebpage() {
+
+        Intent intent = new Intent(this, JavaScriptInterfaceActivity.class);
+        startActivity(intent);
     }
 
     @Override
