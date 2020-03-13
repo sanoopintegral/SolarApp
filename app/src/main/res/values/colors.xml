@@ -9,5 +9,8 @@
     <color name="input_edit_background_activated">#dc7734</color>
     <color name="input_edit_background_default">#D3D3D3</color>
     <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#00f</color>
+    <color name="green">#00ff00</color>
 
 </resources>
